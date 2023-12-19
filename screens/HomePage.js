@@ -24,7 +24,7 @@ const HomePage = () => {
   const [Nearby, setNearbyAgencies] = useState([]);
   const AgencyData = useSelector((state) => state.auth.token);
   const NearbyData = useSelector((state) => state.nearby.nearby);
-  console.log("Nearby Data in redux", NearbyData);
+  // console.log("Nearby Data in redux", NearbyData);
   // console.log("Agency Data",AgencyData);
   const handleSearch = () => {
     // Here, you can perform actions with the searchValue state
@@ -58,7 +58,7 @@ const HomePage = () => {
       try {
         // Make HTTP request to the specified endpoint
         const response = await axios.post(
-          "http://192.168.13.223:4000/api/v1/auth/get-nearby",
+          "https://tiny-pink-binturong-tutu.cyclic.app/api/v1/auth/get-nearby",
           {
             lat: location.coords.latitude,
             lng: location.coords.longitude,
