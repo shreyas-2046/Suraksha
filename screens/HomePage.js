@@ -15,6 +15,8 @@ import Card from "../utils/Card";
 import * as Location from 'expo-location';
 
 
+import Card from "../utils/Card";
+import { ScrollView } from "react-native";
 const HomePage = () => {
   
   const [searchValue, setSearchValue] = useState("");
@@ -91,7 +93,6 @@ const HomePage = () => {
           />
         </TouchableOpacity>
       </View>
-
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.input}
@@ -103,17 +104,6 @@ const HomePage = () => {
           <Text style={styles.buttonText}>Search</Text>
         </TouchableOpacity>
       </View>
-      <View>
-      {Array.isArray(Nearby) && Nearby.length > 0 ? (
-    
-          Nearby.map((item, index) => (
-            <Card key={index} data={item} />
-          ))
-        ) : (
-          <Text>No nearby agencies found</Text>
-        )}
-      </View>
-      
     </SafeAreaView>
   );
 };
@@ -169,7 +159,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   button: {
-    backgroundColor: "orange",
+    backgroundColor: "#FC5B28",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
@@ -177,5 +167,10 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "white",
     fontWeight: "bold",
+  },
+  cardContainer: {
+    flex: 1,
+    marginTop: 20,
+    paddingHorizontal: 10,
   },
 });
