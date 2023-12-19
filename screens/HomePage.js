@@ -62,7 +62,7 @@ const HomePage = () => {
         
         
         // Make HTTP request to the specified endpoint
-        const response = await axios.post('http://192.168.192.136:4000/api/v1/auth/get-nearby', {
+        const response = await axios.post('http://192.168.192.34:4000/api/v1/auth/get-nearby', {
           
             lat: location.coords.latitude,
             lng: location.coords.longitude,
