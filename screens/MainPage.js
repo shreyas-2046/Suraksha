@@ -12,6 +12,7 @@ import {
 // Import your screens and SVG icons
 import HomePage from "./HomePage";
 import MapsPage from "./MapsPage";
+import Card from "../utils/Card";
 // import ResourcesScreen from "./screens/ResourcesScreen";
 // import RequestScreen from "./screens/RequestScreen";
 // import ChatScreen from "./screens/ChatScreen";
