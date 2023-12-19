@@ -22,6 +22,8 @@ import { FontAwesome } from "@expo/vector-icons";
 import PendingRequestPage from "./PendingRequestPage";
 import RequestHistoryPage from "./RequestHistoryPage";
 import InventoryPage from "./InventoryPage";
+import AddResourcePage from "./AddResourcePage";
+import SendRequestPage from "./SendRequestPage";
 const Tab = createBottomTabNavigator();
 
 export default function MainPage() {
@@ -88,7 +90,7 @@ export default function MainPage() {
           headerShown: false,
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="RequestHistory"
         component={RequestHistoryPage}
         options={{
@@ -104,10 +106,45 @@ export default function MainPage() {
           tabBarShowLabel: false,
           headerShown: false,
         }}
-      />
+      /> */}
+
       <Tab.Screen
+        name="AddResourcePage"
+        component={AddResourcePage}
+        options={{
+          tabBarIcon: ({ colors }) => (
+            // Your Maps icon component with color prop
+            <Icon
+              name="history"
+              size={20}
+              color={colors}
+              style={{ width: 20, height: 20 }}
+            />
+          ),
+          tabBarShowLabel: false,
+          headerShown: false,
+        }}
+      />
+      {/* <Tab.Screen
         name="Inventory"
         component={InventoryPage}
+        options={{
+          tabBarIcon: ({ colors }) => (
+            // Your Maps icon component with color prop
+            <Icon
+              name="archive"
+              size={20}
+              color={colors}
+              style={{ width: 20, height: 20 }}
+            />
+          ),
+          tabBarShowLabel: false,
+          headerShown: false,
+        }}
+      /> */}
+      <Tab.Screen
+        name="SendRequestPage"
+        component={SendRequestPage}
         options={{
           tabBarIcon: ({ colors }) => (
             // Your Maps icon component with color prop

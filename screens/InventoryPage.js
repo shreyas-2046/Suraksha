@@ -4,7 +4,7 @@ import React from "react";
 const InventoryPage = () => {
   return (
     <View>
-      <Text>InventroyPagor</Text>
+      <Text>InventroyPago</Text>
     </View>
   );
 };

@@ -7,17 +7,22 @@ import {
   Image,
 } from "react-native";
 import React from "react";
-
-const Card = ({data}) => {
+import { useNavigation } from "@react-navigation/native";
+const Card = ({ data }) => {
+  const navigation = useNavigation();
+  const goToRequestPage = () => {
+    console.log(data._id);
+    navigation.navigate("SendRequestPage", {
+      objectId: data._id, // Assuming the ObjectId field is named _id
+    });
+  };
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>{data.name}</Text>
       </View>
       <View style={styles.body}>
-        <Text style={styles.location}>
-          {data.address}
-        </Text>
+        <Text style={styles.location}>{data.address}</Text>
       </View>
       <View style={styles.bodyt}>
         <Image
@@ -33,7 +38,7 @@ const Card = ({data}) => {
         </View>
       </View>
 
-      <TouchableOpacity style={styles.Lbutton}>
+      <TouchableOpacity style={styles.Lbutton} onPress={goToRequestPage}>
         <Text style={styles.buttonText}>Alert</Text>
       </TouchableOpacity>
     </View>
