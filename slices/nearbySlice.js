@@ -6,26 +6,26 @@ import { createSlice } from "@reduxjs/toolkit";
 // const storedToken = await AsyncStorage.getItem('token');
 
 const initialState = {
-  token: "This is the token i want to retreive from the local storage",
+  nearby: "This is the token i want to retreive from the local storage",
   // token: storedToken ? JSON.parse(storedToken) : null,
 };
 
 // Work to be done
 
 //  fix the erro of async storage and next
-const authSlice = createSlice({
-  name: "auth",
+const nearbySlice = createSlice({
+  name: "nearby",
   initialState: initialState,
   reducers: {
-    setToken(state, action) {
-      state.token = action.payload;
+    setNearby(state, action) {
+      state.nearby = action.payload;
     },
   },
 });
 
 
 
-export const { setToken } = authSlice.actions;
+export const { setNearby } = nearbySlice.actions;
 
 // const saveData = async () => {
 //   try {
@@ -46,4 +46,4 @@ export const { setToken } = authSlice.actions;
 
 
 
-export const authReducer = authSlice.reducer;
+export const nearbyReducer = nearbySlice.reducer;
