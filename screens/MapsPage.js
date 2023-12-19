@@ -11,6 +11,7 @@ import { Ionicons } from "@expo/vector-icons";
 import MapView, { Marker, Callout } from "react-native-maps";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import * as Location from "expo-location";
+import { useSelector } from "react-redux";
 
 const MapsPage = () => {
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -19,6 +20,8 @@ const MapsPage = () => {
   const [errorMsg, setErrorMsg] = useState(null);
   const mapViewRef = useRef(null);
   const searchRef = useRef(null);
+  const NearbyData = useSelector(state => state.nearby.nearby);
+  console.log('Nearby data in redux',NearbyData);
 
   useEffect(() => {
     (async () => {
@@ -319,19 +322,19 @@ const MapsPage = () => {
 
         {/* For adding markers to all nearby places call  */}
 
-        {/* {nearby_api_call.success &&
-          nearby_api_call.nearby.map((agency, index) => (
-            <Marker
-              key={index}
-              coordinate={{
-                latitude: agency?.lat || 0, // Use a default value if latitude is undefined
-                longitude: agency?.lng || 0, // Use a default value if longitude is undefined
-              }}
-              title={agency.name}
-              description={agency.address}
-              pinColor="#000FFF" // can customize the pin color
-            />
-          ))} */}
+        {Array.isArray(NearbyData) && NearbyData.length > 0 ?
+  (NearbyData.map((agency, index) => (
+    <Marker
+      key={index}
+      coordinate={{
+        latitude: agency?.lat || 0, // Use a default value if latitude is undefined
+        longitude: agency?.lng || 0, // Use a default value if longitude is undefined
+      }}
+      title={agency.name}
+      description={agency.address}
+      pinColor="#000FFF" // can customize the pin color
+    />
+  ))):(<></>)}
 
         {tappedLocation && (
           <Marker
