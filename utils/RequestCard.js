@@ -7,43 +7,33 @@ import {
   Image,
 } from "react-native";
 import React from "react";
-import { useNavigation } from "@react-navigation/native";
-const Card = ({ data }) => {
-  const navigation = useNavigation();
-  const goToRequestPage = () => {
-    console.log(data._id);
-    navigation.navigate("SendRequestPage", {
-      objectId: data._id, // Assuming the ObjectId field is named _id
-    });
-  };
+const RequestCard = () => {
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>{data.name}</Text>
+      <View>
+        <Text style={styles.resourceT}>RequestAgencyName</Text>
+        {/* <Text>Request</Text> */}
       </View>
-      <View style={styles.body}>
-        <Text style={styles.location}>{data.address}</Text>
-      </View>
-      <View style={styles.bodyt}>
-        <Image
-          source={require("../assets/phone.png")}
-          style={{ width: 20, height: 20 }}
-        />
-        <Text style={styles.phoneNumber}>{data.contactNumber}</Text>
-      </View>
-      <View style={styles.resources}>
-        <View styles={styles.eachR}>
-          <Text style={styles.resourceT}>Resource</Text>
-          <Text style={styles.resourceQ}>Quantity</Text>
-        </View>
+      <View style={styles.resourceasked}>
+        <Text style={{ color: "white" }}>Resource Name</Text>
+        <TouchableOpacity>
+          <Text style={styles.resourceQ}>2</Text>
+        </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.Lbutton} onPress={goToRequestPage}>
-        <Text style={styles.buttonText}>Alert</Text>
-      </TouchableOpacity>
+      <View style={styles.buttons}>
+        <TouchableOpacity style={styles.Lbutton}>
+          <Text style={styles.buttonText}>Accept</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.Rbutton}>
+          <Text style={styles.buttonText}>Reject</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
+
+export default RequestCard;
 
 const styles = StyleSheet.create({
   container: {
@@ -103,18 +93,24 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
   },
+  buttons: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+  },
   Lbutton: {
     backgroundColor: "#3498db",
-    padding: 15,
+    padding: "5%",
     marginVertical: 10,
     borderRadius: 7,
     alignItems: "center",
     backgroundColor: "#FC5B28",
+    width: "25%",
   },
   buttonText: {
     color: "white",
     fontWeight: "bold",
-    fontSize: 18,
+    fontSize: 10,
   },
   resources: {
     display: "flex",
@@ -129,12 +125,42 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   resourceT: {
-    color: "white",
+    color: "#FC5B28",
     fontWeight: "bold",
+    marginBottom: "5%",
   },
   resourceQ: {
     color: "#FC5B28",
+    fontWeight: "bold",
+  },
+  resourceasked: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  Rbutton: {
+    backgroundColor: "#3498db",
+    padding: 15,
+    marginLeft: "5%",
+    marginVertical: 10,
+    borderBlockColor: "white",
+    borderRadius: 7,
+    borderWidth: 1, // Add border width
+    borderColor: "white", // Set border color
+    alignItems: "center",
+    backgroundColor: "transparent",
+    width: "25%",
+  },
+  buttons: {
+    flexDirection: "row",
+    justifyContent: "flex-end", // Align buttons to the right
+    marginTop: 10,
+  },
+  smallButton: {
+    backgroundColor: "#FC5B28",
+    padding: 8,
+    borderRadius: 7,
+    alignItems: "center",
+    width: 70, // Set a fixed width for smaller buttons
   },
 });
-
-export default Card;
