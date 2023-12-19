@@ -25,7 +25,7 @@ const FillLoginPage = ({ navigation }) => {
   const handleLogin = async () => {
     try {
       const response = await axios.post(
-        "http://12.0.179.75:4000/api/v1/auth/login",
+        "https://tiny-pink-binturong-tutu.cyclic.app/api/v1/auth/login",
         {
           email: username,
           password: password,

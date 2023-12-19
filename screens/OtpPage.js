@@ -28,7 +28,7 @@ const OtpPage = ({ navigation }) => {
       // Make a request to backend to verify OTP
       // Handle logic after OTP verification
       const response = await axios.post(
-        "http://192.168.192.136:4000/api/v1/auth/verifyOtp",
+        "https://tiny-pink-binturong-tutu.cyclic.app/api/v1/auth/verifyOtp",
         {
           email,
           otp,
