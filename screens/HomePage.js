@@ -11,7 +11,7 @@ import {
 import React, { useState,useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import Card from "../utils/Card";
+
 import * as Location from 'expo-location';
 
 
@@ -104,6 +104,15 @@ const HomePage = () => {
           <Text style={styles.buttonText}>Search</Text>
         </TouchableOpacity>
       </View>
+      <ScrollView style={styles.cardContainer}>
+      {Array.isArray(Nearby) && Nearby.length > 0 ? (
+          Nearby.map((item, index) => (
+            <Card key={index} data={item} />
+          ))
+        ) : (
+          <Text>No nearby agencies found</Text>
+        )}
+      </ScrollView>
     </SafeAreaView>
   );
 };
