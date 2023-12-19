@@ -8,30 +8,34 @@ import {
   View,
 } from "react-native";
 
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 
-import * as Location from 'expo-location';
-
+import * as Location from "expo-location";
 
 import Card from "../utils/Card";
 import { ScrollView } from "react-native";
 const HomePage = () => {
-  
   const [searchValue, setSearchValue] = useState("");
   const [location, setLocation] = useState(null);
-  const [Nearby,setNearby] = useState([]);
+  const [Nearby, setNearby] = useState([]);
+  const [filteredNearby, setFilteredNearby] = useState([]);
   const handleSearch = () => {
     // Here, you can perform actions with the searchValue state
     console.log("Search Value:", searchValue);
-    
+    const filteredData = Nearby.filter(
+      (item) =>
+        item.agency &&
+        item.agency.toLowerCase().includes(searchValue.toLowerCase())
+    );
+    setFilteredNearby(filteredData);
   };
   const fetchLocation = async () => {
     try {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.error('Permission to access location was denied');
+      if (status !== "granted") {
+        console.error("Permission to access location was denied");
         return;
       }
 
@@ -39,7 +43,7 @@ const HomePage = () => {
       setLocation(currentLocation);
       console.log("Location", location);
     } catch (error) {
-      console.error('Location fetching error:', error.message);
+      console.error("Location fetching error:", error.message);
     }
   };
 
@@ -50,29 +54,35 @@ const HomePage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        
-        
         // Make HTTP request to the specified endpoint
-        const response = await axios.post('http://192.168.192.136:4000/api/v1/auth/get-nearby', {
-          
+        const response = await axios.post(
+          "http://192.168.13.223:4000/api/v1/auth/get-nearby",
+          {
             lat: 13.2723642,
             lng: 79.1188057,
-          
-        });
+          }
+        );
 
         // Store the result in the nearby state
         setNearby(response.data.nearby);
-        console.log('Nearby data:', response.data.nearby);
+        console.log("Nearby data:", response.data.nearby);
       } catch (error) {
-        console.error('Error fetching nearby data:', error);
+        console.error("Error fetching nearby data:", error);
         // Handle errors as needed
       }
     };
 
     // Call the function when the component mounts
     fetchData();
-
   }, []);
+
+  // code for making them use SearchBTN
+  // useEffect(() => {
+  //   const filteredData = Nearby.filter((item) =>
+  //     item.agency.toLowerCase().includes(searchValue.toLowerCase())
+  //   );
+  //   setNearby(filteredData);
+  // }, [searchValue]);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -105,10 +115,8 @@ const HomePage = () => {
         </TouchableOpacity>
       </View>
       <ScrollView style={styles.cardContainer}>
-      {Array.isArray(Nearby) && Nearby.length > 0 ? (
-          Nearby.map((item, index) => (
-            <Card key={index} data={item} />
-          ))
+        {Array.isArray(Nearby) && Nearby.length > 0 ? (
+          Nearby.map((item, index) => <Card key={index} data={item} />)
         ) : (
           <Text>No nearby agencies found</Text>
         )}
