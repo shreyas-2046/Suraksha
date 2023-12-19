@@ -27,23 +27,6 @@ const nearbySlice = createSlice({
 
 export const { setNearby } = nearbySlice.actions;
 
-// const saveData = async () => {
-//   try {
-//     // Your data to be saved
-//     const data =0;
-
-//     // Convert data to a string (AsyncStorage can only store strings)
-//     const dataString = JSON.stringify(data);
-
-//     // Save data to AsyncStorage
-//     await AsyncStorage.setItem('yourKey', dataString);
-
-//     console.log('Data saved successfully!');
-//   } catch (error) {
-//     console.error('Error saving data:', error);
-//   }
-// };
-
 
 
 export const nearbyReducer = nearbySlice.reducer;
