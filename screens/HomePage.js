@@ -11,6 +11,7 @@ import {
 import React, { useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import Card from "../utils/Card";
 const HomePage = () => {
   const [searchValue, setSearchValue] = useState("");
 
@@ -51,6 +52,11 @@ const HomePage = () => {
           <Text style={styles.buttonText}>Search</Text>
         </TouchableOpacity>
       </View>
+
+      {/*cards to be mapped below */}
+      <Card />
+      <Card />
+      <Card />
     </SafeAreaView>
   );
 };
@@ -106,7 +112,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   button: {
-    backgroundColor: "orange",
+    backgroundColor: "#FC5B28",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
