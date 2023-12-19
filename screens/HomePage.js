@@ -11,6 +11,7 @@ import {
 import React, { useState,useEffect } from "react";
 import axios from "axios";
 import { useSelector ,useDispatch} from "react-redux";
+import {setNearby} from '../slices/nearbySlice';
 
 import * as Location from 'expo-location';
 
@@ -18,12 +19,14 @@ import * as Location from 'expo-location';
 import Card from "../utils/Card";
 import { ScrollView } from "react-native";
 const HomePage = () => {
-  
+  const dispatch = useDispatch();
   const [searchValue, setSearchValue] = useState("");
   const [location, setLocation] = useState(null);
-  const [Nearby,setNearby] = useState([]);
+  const [Nearby,setNearbyAgencies] = useState([]);
   const AgencyData = useSelector(state => state.auth.token);
-  console.log("Agency Data",AgencyData);
+  const NearbyData = useSelector(state => state.nearby.nearby);
+  console.log("Nearby Data in redux",NearbyData);
+  // console.log("Agency Data",AgencyData);
   const handleSearch = () => {
     // Here, you can perform actions with the searchValue state
     console.log("Search Value:", searchValue);
@@ -36,18 +39,22 @@ const HomePage = () => {
         console.error('Permission to access location was denied');
         return;
       }
-
+  
       let currentLocation = await Location.getCurrentPositionAsync({});
       setLocation(currentLocation);
-      console.log("Location", location);
     } catch (error) {
       console.error('Location fetching error:', error.message);
     }
   };
-
+  
   useEffect(() => {
     fetchLocation();
   }, []);
+  
+  useEffect(() => {
+    // console.log("Location", location);
+  }, [location]);
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,15 +62,16 @@ const HomePage = () => {
         
         
         // Make HTTP request to the specified endpoint
-        const response = await axios.post('http://11.0.48.115:4000/api/v1/auth/get-nearby', {
+        const response = await axios.post('http://192.168.192.136:4000/api/v1/auth/get-nearby', {
           
-            lat: 13.2723642,
-            lng: 79.1188057,
+            lat: location.coords.latitude,
+            lng: location.coords.longitude,
           
         });
 
         // Store the result in the nearby state
-        setNearby(response.data.nearby);
+        setNearbyAgencies(response.data.nearby);
+        dispatch(setNearby(response.data.nearby));
         // console.log('Nearby data:', response.data.nearby);
       } catch (error) {
         console.error('Error fetching nearby data:', error);
@@ -74,7 +82,7 @@ const HomePage = () => {
     // Call the function when the component mounts
     fetchData();
 
-  }, []);
+  }, [location]);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -107,8 +115,8 @@ const HomePage = () => {
         </TouchableOpacity>
       </View>
       <ScrollView style={styles.cardContainer}>
-      {Array.isArray(Nearby) && Nearby.length > 0 ? (
-          Nearby.map((item, index) => (
+      {Array.isArray(NearbyData) && NearbyData.length > 0 ? (
+          NearbyData.map((item, index) => (
             <Card key={index} data={item} />
           ))
         ) : (
