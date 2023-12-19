@@ -12,6 +12,8 @@ import {
 //import { Formik } from 'formik'
 import { useRoute } from "@react-navigation/native";
 import axios from "axios";
+import RNPickerSelect from 'react-native-picker-select';
+
 
 const RegisterPage = ({ navigation }) => {
   const handleLoginPress = () => {
@@ -26,6 +28,17 @@ const RegisterPage = ({ navigation }) => {
   const [agencyType, setAgencyType] = useState("");
   const [address, setAddress] = useState("");
   const [location, setLocation] = useState(null);
+  const data = [
+    { label: 'Police', value: 'Police' },
+    { label: 'Fire Brigade', value: 'Fire-Brigade' },
+    { label: 'Hospital', value: 'Hospital' },
+    { label: 'CRPF', value: 'CRPF' },
+    { label: 'NDRF', value: 'NDRF' },
+    { label: 'SRPF', value: 'SRPF' },
+    { label: 'Army', value: 'Army' },
+    // Add more options as needed
+  ];
+
 
   
   const fetchLocation = async () => {
@@ -65,7 +78,7 @@ const RegisterPage = ({ navigation }) => {
         address,
       });
       if (response.status === 200) {
-        navigation.navigate("FillResourcePage", { email });
+        navigation.navigate("FillLoginPage", { email });
       } else if (response.status === 400) {
         console.log("OTP Incorrect");
       }
@@ -77,6 +90,26 @@ const RegisterPage = ({ navigation }) => {
       console.error('Registration error:', error.message);
 
       // Handle error or display an error message to the user
+    }
+  };
+
+  const handleAutoFill = async () => {
+    try {
+      await fetchLocation();
+
+      // Use Google Maps Geocoding API to get the address
+      const response = await axios.get(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.coords.latitude},${location.coords.longitude}&key=AIzaSyAv2mNDcGW3aO-rWP3sgPHsWEizt_u8OZ8`
+      );
+
+      if (response.data.status === "OK") {
+        const formattedAddress = response.data.results[0].formatted_address;
+        setAddress(formattedAddress);
+      } else {
+        console.log("Unable to fetch address from coordinates");
+      }
+    } catch (error) {
+      console.error('Auto-fill error:', error.message);
     }
   };
   return (
@@ -110,13 +143,21 @@ const RegisterPage = ({ navigation }) => {
         onChangeText={(text) => setConfirmEmail(text)}
         keyboardType="email-address"
       />
-      <TextInput
+      {/* <TextInput
         style={styles.input}
         placeholder="Agency Type"
         value={agencyType}
         onChangeText={(text) => setAgencyType(text)}
         keyboardType="email-address"
-      />
+      /> */}
+      <View style={styles.dropdown}>
+                    <RNPickerSelect
+                        onValueChange={(value) => setAgencyType(value)}
+                        items={data}
+                        placeholder={{ label: 'Select Agency Type', value: null }}
+                        // style={pickerSelectStyles}
+                    />
+                </View>
       <TextInput
         style={styles.input}
         placeholder="Contact Number"
@@ -137,7 +178,7 @@ const RegisterPage = ({ navigation }) => {
         <TouchableOpacity style={styles.Lbutton} onPress={handleRegister}>
           <Text style={styles.buttonTextRegister}>Register</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.Rbutton}>
+        <TouchableOpacity style={styles.Rbutton} onPress={handleAutoFill}>
           <Text style={styles.buttonTextGPS}>GPS (auto fill)</Text>
         </TouchableOpacity>
       </View>
@@ -154,35 +195,35 @@ const RegisterPage = ({ navigation }) => {
 };
 
 
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    height: 50,
-    width: "100%",
-    borderColor: "gray",
-    borderWidth: 1,
-    borderRadius: 8,
-    marginBottom: 10,
-    backgroundColor: "white",
-    paddingHorizontal: 8,
-    paddingVertical: 15,
-    marginVertical: 2,
-  },
-  inputAndroid: {
-    height: 50,
-    width: "100%",
-    borderColor: "gray",
-    borderWidth: 1,
-    borderRadius: 8,
-    marginBottom: 10,
-    backgroundColor: "white",
-    paddingHorizontal: 8,
-    paddingVertical: 15,
-    marginVertical: 2,
-  },
-  textInputProps: {
-    color: 'black', // Set text color to black
-  }
-});
+// const pickerSelectStyles = StyleSheet.create({
+//   inputIOS: {
+//     height: 50,
+//     width: "100%",
+//     borderColor: "gray",
+//     borderWidth: 1,
+//     borderRadius: 8,
+//     marginBottom: 10,
+//     backgroundColor: "white",
+//     paddingHorizontal: 8,
+//     paddingVertical: 15,
+//     marginVertical: 2,
+//   },
+//   inputAndroid: {
+//     height: 50,
+//     width: "100%",
+//     borderColor: "gray",
+//     borderWidth: 1,
+//     borderRadius: 8,
+//     marginBottom: 10,
+//     backgroundColor: "white",
+//     paddingHorizontal: 8,
+//     paddingVertical: 15,
+//     marginVertical: 2,
+//   },
+//   textInputProps: {
+//     color: 'black', // Set text color to black
+//   }
+// });
 
 const styles = StyleSheet.create({
   container: {
@@ -252,6 +293,18 @@ const styles = StyleSheet.create({
   Login: {
     color: "#FC5B28",
   },
+  dropdown: {
+    backgroundColor: "white",
+    fontWeight: "bold",
+    marginVertical: 10,
+    borderRadius: 8,
+    borderWidth: 1, // Add border width
+    width: "100%",
+    height: 50,
+    // marginLeft: 50,
+    marginTop: 1,
+},
+
 });
 
 export default RegisterPage;
