@@ -25,7 +25,7 @@ const FillLoginPage = ({ navigation }) => {
   const handleLogin = async () => {
     try {
       const response = await axios.post(
-        "http://192.168.13.223:4000/api/v1/auth/login",
+        "http://12.0.179.75:4000/api/v1/auth/login",
         {
           email: username,
           password: password,
