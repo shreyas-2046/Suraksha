@@ -12,6 +12,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import Card from "../utils/Card";
+import { ScrollView } from "react-native";
 const HomePage = () => {
   const [searchValue, setSearchValue] = useState("");
 
@@ -40,7 +41,6 @@ const HomePage = () => {
           />
         </TouchableOpacity>
       </View>
-
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.input}
@@ -52,11 +52,12 @@ const HomePage = () => {
           <Text style={styles.buttonText}>Search</Text>
         </TouchableOpacity>
       </View>
-
       {/*cards to be mapped below */}
-      <Card />
-      <Card />
-      <Card />
+      <ScrollView style={styles.cardContainer}>
+        <Card />
+        <Card />
+        <Card />
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -120,5 +121,10 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "white",
     fontWeight: "bold",
+  },
+  cardContainer: {
+    flex: 1,
+    marginTop: 20,
+    paddingHorizontal: 10,
   },
 });

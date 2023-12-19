@@ -28,10 +28,11 @@ const Card = () => {
       </View>
       <View style={styles.resources}>
         <View styles={styles.eachR}>
-          <Text>Resource1</Text>
-          <Text>Quantity</Text>
+          <Text style={styles.resourceT}>Resource</Text>
+          <Text style={styles.resourceQ}>Quantity</Text>
         </View>
       </View>
+
       <TouchableOpacity style={styles.Lbutton}>
         <Text style={styles.buttonText}>Alert</Text>
       </TouchableOpacity>
@@ -111,13 +112,23 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   resources: {
-    flex: 1,
+    display: "flex",
     flexDirection: "row",
     marginTop: "2%",
     padding: "5%",
   },
   eachR: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  resourceT: {
     color: "white",
+    fontWeight: "bold",
+  },
+  resourceQ: {
+    color: "#FC5B28",
   },
 });
 
