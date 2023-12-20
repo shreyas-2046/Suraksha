@@ -1,18 +1,23 @@
+import { FontAwesome } from "@expo/vector-icons";
+import { useRoute } from "@react-navigation/native";
+
+import { useEffect } from "react";
 import React, { useState } from "react";
 import {
+  TextInput,
   Image,
   SafeAreaView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
-import { useSelector  } from "react-redux";
-import { useRoute } from "@react-navigation/native";
 import axios from "axios";
-import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setNearby } from "../slices/nearbySlice";
+import * as Location from "expo-location";
+import Card from "../utils/Card";
+import { ScrollView } from "react-native";
 const SendRequestPage = () => {
   const [resource, setResource] = useState("");
   const [quantity, setQuantity] = useState("");
@@ -20,15 +25,15 @@ const SendRequestPage = () => {
   const route = useRoute();
   const ToRequestAgency = route.params?.objectId || "No Id found";
   const RequestingAgency = useSelector((state) => state.auth.token);
+  const dispatch = useDispatch();
 
-
-  const[resourcelist,setResourceList] = useState({});
+  const [resourcelist, setResourceList] = useState({});
 
   const fetchLocation = async () => {
     try {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.error('Permission to access location was denied');
+      if (status !== "granted") {
+        console.error("Permission to access location was denied");
         return;
       }
 
@@ -36,28 +41,43 @@ const SendRequestPage = () => {
       setLocation(currentLocation);
       console.log("Location", currentLocation);
     } catch (error) {
-      console.error('Location fetching error:', error.message);
+      console.error("Location fetching error:", error.message);
     }
   };
 
   useEffect(() => {
     fetchLocation();
   }, []);
-  const sendRequest = async() => {
-    try{
+  const resourceTypes = [
+    { value: "Food", label: "Food" },
+    { value: "Medical Supplies", label: "Medical Supplies" },
+    { value: "Equipment", label: "Equipment" },
+    // Add other resources as needed
+  ];
+
+  const sendRequest = async () => {
+    try {
       const jsonData = {
-        selectedAgencyId:ToRequestAgency,
-        userId:RequestingAgency.agency._id,
-        lat:0,
-        lng:0,
-        resource:resourcelist
-      }
-      console.log("printing the data", ToRequestAgency, " ", RequestingAgency.agency._id, " ", resourcelist)
-      const response = await axios.post('https://tiny-pink-binturong-tutu.cyclic.app/api/v1/auth/send-request',jsonData)
-      console.log(response)
-    
-    }
-    catch(error){
+        selectedAgencyId: ToRequestAgency,
+        userId: RequestingAgency.agency._id,
+        lat: 0,
+        lng: 0,
+        resource: resourcelist,
+      };
+      console.log(
+        "printing the data",
+        ToRequestAgency,
+        " ",
+        RequestingAgency.agency._id,
+        " ",
+        resourcelist
+      );
+      const response = await axios.post(
+        "https://tiny-pink-binturong-tutu.cyclic.app/api/v1/auth/send-request",
+        jsonData
+      );
+      console.log(response);
+    } catch (error) {
       console.log(error);
     }
   };
@@ -71,8 +91,8 @@ const SendRequestPage = () => {
   useEffect(() => {
     setResourceList({
       name: [resource],
-      quantity:[parseInt(quantity)]
-    })
+      quantity: [parseInt(quantity)],
+    });
   }, [resource, quantity]);
   return (
     <SafeAreaView style={styles.container}>

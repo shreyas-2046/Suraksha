@@ -7,6 +7,8 @@ import {
   Image,
 } from "react-native";
 import React from "react";
+import { useCallback } from "react";
+import { Linking } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 const Card = ({ data }) => {
   const navigation = useNavigation();
@@ -16,6 +18,23 @@ const Card = ({ data }) => {
       objectId: data._id, // Assuming the ObjectId field is named _id
     });
   };
+
+  const phoneNumber = data.contactNumber;
+
+  const openMessagingApp = useCallback(() => {
+    const message = "Hello, we need urgent resources"; // Replace with your desired message
+    const url = `sms:${data.contactNumber}?body=${encodeURIComponent(message)}`;
+
+    Linking.canOpenURL(url)
+      .then((supported) => {
+        if (supported) {
+          return Linking.openURL(url);
+        } else {
+          console.error("Unable to open messaging app");
+        }
+      })
+      .catch((err) => console.error(err));
+  }, [phoneNumber]);
 
   return (
     <View style={styles.container}>
@@ -30,20 +49,23 @@ const Card = ({ data }) => {
           source={require("../assets/phone.png")}
           style={{ width: 20, height: 20 }}
         />
-        <Text style={styles.phoneNumber}>{data.contactNumber}</Text>
+        <Text style={styles.phoneNumber} onPress={openMessagingApp}>
+          {data.contactNumber}
+        </Text>
       </View>
       <View style={styles.resources}>
         <View styles={styles.eachR}>
-          
-          <View >
-              {data.resources.map((resource, index) => (
-                <View key={index} style={styles.resourcesection}>
-                <Text style={styles.resourceT} key={index}>{resource.name}</Text>
-                <Text style={styles.resourceQ} key={index}>{resource.quantity}</Text>
-                </View>
-                
-                
-              ))}
+          <View>
+            {data.resources.map((resource, index) => (
+              <View key={index} style={styles.resourcesection}>
+                <Text style={styles.resourceT} key={index}>
+                  {resource.name}
+                </Text>
+                <Text style={styles.resourceQ} key={index}>
+                  {resource.quantity}
+                </Text>
+              </View>
+            ))}
           </View>
           {/* <View>
           {data.resources.map((resource, index) => (
@@ -143,10 +165,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  resourcesection:{
-    display:"flex",
-    flexDirection:"column",
-
+  resourcesection: {
+    display: "flex",
+    flexDirection: "column",
   },
   resourceT: {
     color: "white",
@@ -154,7 +175,7 @@ const styles = StyleSheet.create({
   },
   resourceQ: {
     color: "#FC5B28",
-    margin:"2%",
+    margin: "2%",
   },
 });
 

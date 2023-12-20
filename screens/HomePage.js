@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     borderWidth: 1, // Add border width
     width: 200,
     height: 50,
-    marginLeft: 50,
+    marginLeft: "20%",
     marginTop: 1,
   },
   button: {
@@ -208,7 +208,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
-    marginLeft: 10,
+    marginLeft: "20%",
+    width: "50%",
   },
   buttonText: {
     color: "white",

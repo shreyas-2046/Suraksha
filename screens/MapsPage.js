@@ -348,18 +348,20 @@ const MapsPage = () => {
                   <Text style={styles.calloutDetails}>
                     Agency Type: {agency.agencyType}
                   </Text>
+                  {/* Example of how you can conditionally access the properties */}
                   <Text style={styles.calloutDetails}>
-                    Resource: {agency.resources[0].name[0]}
+                    Resource:{" "}
+                    {agency.resources &&
+                      agency.resources[0]?.name &&
+                      agency.resources[0].name[0]}
                   </Text>
                   <Text style={styles.calloutDetails}>
-                    Quantity :{agency.resources[0].quantity[0]}
+                    Quantity :
+                    {agency.resources &&
+                      agency.resources[0]?.quantity &&
+                      agency.resources[0].quantity[0]}
                   </Text>
-                  <Text style={styles.calloutDetails}>
-                    Resource: {agency.resources[0].name[1]}
-                  </Text>
-                  <Text style={styles.calloutDetails}>
-                    Quantity :{agency.resources[0].quantity[1]}
-                  </Text>
+                  {/* Repeat the structure for other details */}
                 </View>
               </Callout>
             </Marker>

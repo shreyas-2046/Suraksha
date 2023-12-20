@@ -24,6 +24,7 @@ import RequestHistoryPage from "./RequestHistoryPage";
 import InventoryPage from "./InventoryPage";
 import AddResourcePage from "./AddResourcePage";
 import SendRequestPage from "./SendRequestPage";
+import CheckResourcesPage from "./CheckResourcesPage";
 const Tab = createBottomTabNavigator();
 
 export default function MainPage() {
@@ -150,6 +151,23 @@ export default function MainPage() {
             // Your Maps icon component with color prop
             <Icon
               name="archive"
+              size={20}
+              color={colors}
+              style={{ width: 20, height: 20 }}
+            />
+          ),
+          tabBarShowLabel: false,
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="CheckResources"
+        component={CheckResourcesPage}
+        options={{
+          tabBarIcon: ({ colors }) => (
+            // Your Maps icon component with color prop
+            <Icon
+              name="arrow-down"
               size={20}
               color={colors}
               style={{ width: 20, height: 20 }}
