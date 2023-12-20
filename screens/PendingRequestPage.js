@@ -50,7 +50,7 @@ const PendingRequestPage = () => {
           <Text style={styles.title}>Pending Request</Text>
           {/* <Text style={styles.subtitle}></Text> */}
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={fetchPendingRequests}>
           <Image
             source={require("../assets/hamBurgerIcon.png")}
             style={styles.ham}
