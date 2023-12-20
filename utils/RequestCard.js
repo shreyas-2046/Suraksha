@@ -7,9 +7,41 @@ import {
   Image,
 } from "react-native";
 import React from "react";
-
+import axios from "axios";
 
 const RequestCard = ({data}) => {
+  const handleAccept = async() => {
+    try{
+      const response = await axios.post(
+        "https://tiny-pink-binturong-tutu.cyclic.app/api/v1/auth/receiver-action",
+        {
+          request_id: data._id,
+          action: "Accepted",
+        }
+      );
+      console.log("data: ", response.data.requests);
+
+    }
+    catch(err){
+      console.log(err);
+    }
+  }
+  const handleReject = async() => {
+    try{
+      const response = await axios.post(
+        "https://tiny-pink-binturong-tutu.cyclic.app/api/v1/auth/receiver-action",
+        {
+          request_id: data._id,
+          action: "Rejected",
+        }
+      );
+      console.log("data: ", response.data.requests);
+      
+    }
+    catch(err){
+      console.log(err);
+    }
+  }
   return (
     <View style={styles.container}>
       <View>
@@ -24,10 +56,10 @@ const RequestCard = ({data}) => {
       </View>
 
       <View style={styles.buttons}>
-        <TouchableOpacity style={styles.Lbutton}>
+        <TouchableOpacity style={styles.Lbutton} onPress={handleAccept}>
           <Text style={styles.buttonText}>Accept</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.Rbutton}>
+        <TouchableOpacity style={styles.Rbutton} onPress={handleReject}>
           <Text style={styles.buttonText}>Reject</Text>
         </TouchableOpacity>
       </View>
