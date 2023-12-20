@@ -66,7 +66,7 @@ const RegisterPage = ({ navigation }) => {
       await fetchLocation();
       console.log("Printing in Register Page",agencyName,contactNumber,confirmEmail,address);
       
-      const response = await axios.post('http://192.168.192.136:4000/api/v1/auth/register', {
+      const response = await axios.post('https://tiny-pink-binturong-tutu.cyclic.app/api/v1/auth/register', {
         Name:agencyName,
         email:email,
         password,

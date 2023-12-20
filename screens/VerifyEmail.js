@@ -18,7 +18,7 @@ const VerifyEmail = ({ navigation }) => {
       try {
         // Make a POST request to backend to send OTP email
         const response = await axios.post(
-          "http://192.168.192.136:4000/api/v1/auth/sendOtp",
+          "https://tiny-pink-binturong-tutu.cyclic.app/api/v1/auth/sendOtp",
           {
             email, // Assuming username is the email entered
           }

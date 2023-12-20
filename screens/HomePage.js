@@ -1,35 +1,55 @@
+import React, { useState, useEffect } from "react";
 import {
   Image,
   SafeAreaView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-
-import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { setNearby } from "../slices/nearbySlice";
-
 import * as Location from "expo-location";
-
 import Card from "../utils/Card";
 import { ScrollView } from "react-native";
+import RNPickerSelect from 'react-native-picker-select';
+
+const agencyTypes = [
+  { value: "Fire-Brigade", label: "Fire-Brigade" },
+  { value: "Hospital", label: "Hospital" },
+  { value: "Police", label: "Police" },
+  { value: "CRPF", label: "CRPF" },
+  { value: "NDRF", label: "NDRF" },
+  { value: "SRPF", label: "SRPF" },
+  { value: "Army", label: "Army" },
+];
+
 const HomePage = () => {
   const dispatch = useDispatch();
   const [searchValue, setSearchValue] = useState("");
   const [location, setLocation] = useState(null);
+  const [selectedAgencyType, setSelectedAgencyType] = useState(null);
   const [Nearby, setNearbyAgencies] = useState([]);
   const AgencyData = useSelector((state) => state.auth.token);
-  const NearbyData = useSelector((state) => state.nearby.nearby);
-  console.log("Nearby Data in redux", NearbyData);
-  // console.log("Agency Data",AgencyData);
+  const [NearbyData,setNearbyData] = useState(useSelector((state) => state.nearby.nearby));
+
   const handleSearch = () => {
-    // Here, you can perform actions with the searchValue state
-    console.log("Search Value:", searchValue);
+    // console.log("Search Value:", searchValue);
+    // console.log("Selected Agency Type:", selectedAgencyType);
+    // fetchData();
+    // Filter the data based on the selected agency type
+    const filteredNearby = NearbyData.filter(
+      (item) => item.agencyType === selectedAgencyType
+    );
+      // console.log("filtered agency is " , filteredNearby)
+    // Set the filtered data to state
+    setNearbyAgencies(filteredNearby);
+    setNearbyData(Nearby);
+    // Call the API with the filtered data
+    // fetchData();
   };
+
   const fetchLocation = async () => {
     try {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -45,39 +65,58 @@ const HomePage = () => {
     }
   };
 
-  useEffect(() => {
-    fetchLocation();
-  }, []);
+
 
   useEffect(() => {
-    // console.log("Location", location);
-  }, [location]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Make HTTP request to the specified endpoint
-        const response = await axios.post(
-          "http://192.168.13.223:4000/api/v1/auth/get-nearby",
-          {
-            lat: location.coords.latitude,
-            lng: location.coords.longitude,
-          }
-        );
-
-        // Store the result in the nearby state
-        setNearbyAgencies(response.data.nearby);
-        dispatch(setNearby(response.data.nearby));
-        // console.log('Nearby data:', response.data.nearby);
-      } catch (error) {
-        console.error("Error fetching nearby data:", error);
-        // Handle errors as needed
-      }
-    };
-
-    // Call the function when the component mounts
     fetchData();
-  }, [location]);
+  }, [location, selectedAgencyType]);
+
+  useEffect(() => {
+    fetchNearbyData();
+  },[])
+
+  const fetchNearbyData = async () => {
+    const response = await axios.post(
+      "http://12.0.179.75:4000/api/v1/auth/get-nearby",
+      {
+        lat: location?.coords?.latitude || 0,
+        lng: location?.coords?.longitude || 0,
+        // filter: selectedAgencyType, // Use the selected agency type directly
+      }
+    );
+
+    // console.log("API Response:", response.data);
+
+    setNearbyAgencies(response.data.nearby);
+    dispatch(setNearbyData(response.data.nearby)); 
+  }
+  const fetchData = async () => {
+    try {
+      if (selectedAgencyType === null) {
+        console.log("Please select an agency type");
+        return;
+      }
+  
+      const response = await axios.post(
+        "http://12.0.179.75:4000/api/v1/auth/get-nearby",
+        {
+          lat: location?.coords?.latitude || 0,
+          lng: location?.coords?.longitude || 0,
+          // filter: selectedAgencyType, // Use the selected agency type directly
+        }
+      );
+  
+      // console.log("API Response:", response.data);
+  
+      setNearbyAgencies(response.data.nearby);
+      dispatch(setNearbyData(response.data.nearby));
+    } catch (error) {
+      console.error("Error fetching nearby data:", error);
+    }
+  };
+  
+  
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -99,23 +138,24 @@ const HomePage = () => {
         </TouchableOpacity>
       </View>
       <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Search..."
-          value={searchValue}
-          onChangeText={(text) => setSearchValue(text)}
+        <RNPickerSelect
+          onValueChange={(value) => setSelectedAgencyType(value)}
+          items={agencyTypes}
+          placeholder={{ label: "Select Agency Type", value: null }}
+          style={pickerSelectStyles}
         />
+        </View>
         <TouchableOpacity style={styles.button} onPress={handleSearch}>
           <Text style={styles.buttonText}>Search</Text>
         </TouchableOpacity>
-      </View>
+      
       <ScrollView style={styles.cardContainer}>
-        {Array.isArray(NearbyData) && NearbyData.length > 0 ? (
-          NearbyData.map((item, index) => <Card key={index} data={item} />)
-        ) : (
-          <Text>No nearby agencies found</Text>
-        )}
-      </ScrollView>
+  {Array.isArray(Nearby) && Nearby.length > 0 ? (
+    Nearby.map((item, index) => <Card key={index} data={item} />)
+  ) : (
+    <Text>No nearby agencies found</Text>
+  )}
+</ScrollView>
     </SafeAreaView>
   );
 };
@@ -131,7 +171,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-evenly",
     marginTop: 45,
-    paddingHorizontal: 10, // Add some padding for space
+    paddingHorizontal: 10,
   },
   logo: {
     width: 60,
@@ -144,7 +184,7 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   textContainer: {
-    marginLeft: 5, // Adjust as needed for spacing between logo and text
+    marginLeft: 5,
   },
   title: {
     fontSize: 20,
@@ -152,29 +192,26 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 16,
-    marginTop: 5, // Add margin for space between the title and subtitle
+    marginTop: 5,
   },
   searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 20,
-    marginTop: 20,
-  },
-  input: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    marginRight: 10,
+    backgroundColor: "white",
+    fontWeight: "bold",
+    marginVertical: 10,
+    borderRadius: 7,
+    borderWidth: 1, // Add border width
+    width: 200,
+    height: 50,
+    marginLeft: 50,
+    marginTop: 1,
+
   },
   button: {
     backgroundColor: "#FC5B28",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
+    marginLeft: 10,
   },
   buttonText: {
     color: "white",
@@ -184,5 +221,30 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 20,
     paddingHorizontal: 10,
+  },
+});
+
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    color: "black",
+    paddingRight: 30,
+    marginBottom: 10,
+  },
+  inputAndroid: {
+    fontSize: 16,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    color: "black",
+    paddingRight: 30,
+    marginBottom: 10,
   },
 });
