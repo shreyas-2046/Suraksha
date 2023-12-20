@@ -6,11 +6,37 @@ import {
   Text,
   View,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { TouchableOpacity } from "react-native";
 import RequestCard from "../utils/RequestCard";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import { useState } from "react";
+// const agencyId = useSelector((state) => state.auth.token);
+
+
 
 const PendingRequestPage = () => {
+  const agencyId = useSelector((state) => state.auth.token);
+  const [data,setData] = useState([])
+  const fetchPendingRequests = async () => {
+    try {
+      const response = await axios.post(
+        "https://tiny-pink-binturong-tutu.cyclic.app/api/v1/auth/receiver-pending-requests",
+        {
+          agencyID: agencyId.agency._id,
+        }
+      );
+      setData(response.data.requests);
+      console.log("data: ", response.data.requests);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchPendingRequests();
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -32,9 +58,11 @@ const PendingRequestPage = () => {
         </TouchableOpacity>
       </View>
       <ScrollView>
-        <RequestCard />
-        <RequestCard />
-        <RequestCard />
+        {
+          data?.map((request, index) => (
+            <RequestCard key={index} data={request} />
+          ))
+        }
       </ScrollView>
     </SafeAreaView>
   );

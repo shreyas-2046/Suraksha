@@ -9,30 +9,71 @@ import {
   View,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-
+import { useSelector  } from "react-redux";
+import { useRoute } from "@react-navigation/native";
+import axios from "axios";
+import { useEffect } from "react";
 const SendRequestPage = () => {
   const [resource, setResource] = useState("");
   const [quantity, setQuantity] = useState("");
+  const [location, setLocation] = useState(null);
+  const route = useRoute();
+  const ToRequestAgency = route.params?.objectId || "No Id found";
+  const RequestingAgency = useSelector((state) => state.auth.token);
 
-  const sendRequest = () => {
-    // Perform Axios POST request with resource and quantity
-    // Example:
-    // axios.post('your_backend_api', { resource, quantity })
-    //   .then((response) => {
-    //     // Handle response
-    //   })
-    //   .catch((error) => {
-    //     // Handle error
-    //   });
-    console.log("Resource:", resource);
-    console.log("Quantity:", quantity);
+
+  const[resourcelist,setResourceList] = useState({});
+
+  const fetchLocation = async () => {
+    try {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        console.error('Permission to access location was denied');
+        return;
+      }
+
+      let currentLocation = await Location.getCurrentPositionAsync({});
+      setLocation(currentLocation);
+      console.log("Location", currentLocation);
+    } catch (error) {
+      console.error('Location fetching error:', error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchLocation();
+  }, []);
+  const sendRequest = async() => {
+    try{
+      const jsonData = {
+        selectedAgencyId:ToRequestAgency,
+        userId:RequestingAgency.agency._id,
+        lat:0,
+        lng:0,
+        resource:resourcelist
+      }
+      console.log("printing the data", ToRequestAgency, " ", RequestingAgency.agency._id, " ", resourcelist)
+      const response = await axios.post('https://http://tiny-pink-binturong-tutu.cyclic.app/api/v1/auth/send-request',jsonData)
+
+    
+    }
+    catch(error){
+      console.log(error);
+    }
   };
 
   const resetFields = () => {
     setResource("");
     setQuantity("");
+    setResourceList({});
   };
 
+  useEffect(() => {
+    setResourceList({
+      name: [resource],
+      quantity:[parseInt(quantity)]
+    })
+  }, [resource, quantity]);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>

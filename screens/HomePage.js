@@ -24,7 +24,7 @@ const HomePage = () => {
   const [Nearby, setNearbyAgencies] = useState([]);
   const AgencyData = useSelector((state) => state.auth.token);
   const NearbyData = useSelector((state) => state.nearby.nearby);
-  // console.log("Nearby Data in redux", NearbyData);
+  console.log("Nearby Data in redux", NearbyData);
   // console.log("Agency Data",AgencyData);
   const handleSearch = () => {
     // Here, you can perform actions with the searchValue state
@@ -90,6 +90,7 @@ const HomePage = () => {
         <View style={styles.textContainer}>
           <Text style={styles.title}>{AgencyData.agency.name}</Text>
           <Text style={styles.subtitle}>{AgencyData.agency.address}</Text>
+          
         </View>
         <TouchableOpacity>
           <Image

@@ -7,17 +7,19 @@ import {
   Image,
 } from "react-native";
 import React from "react";
-const RequestCard = () => {
+
+
+const RequestCard = ({data}) => {
   return (
     <View style={styles.container}>
       <View>
-        <Text style={styles.resourceT}>RequestAgencyName</Text>
+        <Text style={styles.resourceT}>{data.from.name}</Text>
         {/* <Text>Request</Text> */}
       </View>
       <View style={styles.resourceasked}>
-        <Text style={{ color: "white" }}>Resource Name</Text>
+        <Text style={{ color: "white" }}>{data.resource.name[0]}</Text>
         <TouchableOpacity>
-          <Text style={styles.resourceQ}>2</Text>
+          <Text style={styles.resourceQ}>{data.resource.quantity[0]}</Text>
         </TouchableOpacity>
       </View>
 
