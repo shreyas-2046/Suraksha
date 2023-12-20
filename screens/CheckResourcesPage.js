@@ -43,8 +43,8 @@ const CheckResourcesPage = () => {
           />
         </TouchableOpacity>
         <View style={styles.textContainer}>
-          <Text style={styles.title}>5BN NDRF</Text>
-          <Text style={styles.subtitle}>Inventory Page</Text>
+          <Text style={styles.title}>{AgencyData.agency.name}</Text>
+          <Text style={styles.subtitle}>{AgencyData.agency.address}</Text>
         </View>
         <TouchableOpacity>
           <Image

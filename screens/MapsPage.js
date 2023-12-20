@@ -385,7 +385,7 @@ const MapsPage = () => {
             console.log("Selected Location:", selectedLocation);
           }}
         >
-          <Text style={styles.buttonText}>Confirm</Text>
+          <Text style={styles.buttonText}>Maps</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

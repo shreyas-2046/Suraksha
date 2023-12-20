@@ -47,7 +47,7 @@ const RequestCard = ({ data }) => {
     setLoading(false);
   };
 
-  useEffect (()=>{} , [loading])
+  useEffect(() => {}, [loading]);
   return (
     <View style={styles.container}>
       <View>
@@ -168,6 +168,7 @@ const styles = StyleSheet.create({
     color: "#FC5B28",
     fontWeight: "bold",
     marginBottom: "5%",
+    fontSize: 20,
   },
   resourceQ: {
     color: "#FC5B28",

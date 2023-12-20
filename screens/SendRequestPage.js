@@ -26,7 +26,7 @@ const SendRequestPage = () => {
   const ToRequestAgency = route.params?.objectId || "No Id found";
   const RequestingAgency = useSelector((state) => state.auth.token);
   const dispatch = useDispatch();
-
+  const AgencyData = useSelector((state) => state.auth.token);
   const [resourcelist, setResourceList] = useState({});
 
   const fetchLocation = async () => {
@@ -104,8 +104,8 @@ const SendRequestPage = () => {
           />
         </TouchableOpacity>
         <View style={styles.textContainer}>
-          <Text style={styles.title}>5BN NDRF</Text>
-          <Text style={styles.subtitle}>Pune,Maharastra</Text>
+          <Text style={styles.title}>{AgencyData.agency.name}</Text>
+          <Text style={styles.subtitle}>{AgencyData.agency.address}</Text>
         </View>
         <TouchableOpacity>
           <Image

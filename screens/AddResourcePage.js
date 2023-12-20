@@ -8,6 +8,8 @@ import {
   Touchable,
   TextInput,
 } from "react-native";
+import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
 import React, { useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
@@ -16,11 +18,47 @@ import RNPickerSelect from "react-native-picker-select";
 const AddResourcePage = ({ navigation }) => {
   const [searchedValue, setSearchedValue] = useState("");
   const [quantity, setQuantity] = useState(""); // Initial quantity value
+
   const data = [
     { label: "Option 1", value: "option1" },
     { label: "Option 2", value: "option2" },
     { label: "Option 3", value: "option3" },
   ];
+
+  const AgencyData = useSelector((state) => state.auth.token);
+  console.log(AgencyData.agency.name);
+
+  const handleclickadd = async () => {
+    try {
+      const { agency } = AgencyData;
+
+      // Extracting resource name and quantity
+      const resources = agency.resources || [];
+
+      // Iterate through resources array to extract name and quantity
+      // resources.forEach(resource => {
+      //   resourceNames.push(resource.name);
+      //   resourceQuantities.push(resource.quantity);
+      // });
+
+      const response = await axios.post(
+        "https://tiny-pink-binturong-tutu.cyclic.app/api/v1/auth/add-resource",
+        {
+          // lat: location.coords.latitude,
+          // lng : location.coords.longitude,
+          agencyId: agency._id,
+          resourceName: searchedValue,
+          resourceQuantity: quantity,
+        }
+      );
+
+      if (agency && agency.resources) {
+        console.log("Resources:", agency.resources.name);
+      }
+    } catch (err) {
+      console.error("Error Fetching nearby data : ", err);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -32,8 +70,8 @@ const AddResourcePage = ({ navigation }) => {
           />
         </View>
         <View>
-          <Text style={styles.agencyName}>5 Bn NDRF</Text>
-          <Text style={styles.agencyAddress}>MAVAL, Sudumbre, Maharashtra</Text>
+          <Text style={styles.agencyName}>{AgencyData.agency.name}</Text>
+          <Text style={styles.agencyAddress}>{AgencyData.agency.address}</Text>
         </View>
       </View>
 
@@ -82,7 +120,7 @@ const AddResourcePage = ({ navigation }) => {
             onChangeText={(text) => setQuantity(text)}
           />
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleclickadd}>
           <Image
             style={styles.plus_circle}
             source={require("../assets/plus_circle.png")}
@@ -135,7 +173,7 @@ const styles = StyleSheet.create({
   },
   agencyName: {
     fontWeight: "bold",
-    fontSize: 40,
+    fontSize: 30,
     //marginTop: ,
     paddingHorizontal: 10,
   },
