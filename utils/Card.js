@@ -16,6 +16,7 @@ const Card = ({ data }) => {
       objectId: data._id, // Assuming the ObjectId field is named _id
     });
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -33,8 +34,22 @@ const Card = ({ data }) => {
       </View>
       <View style={styles.resources}>
         <View styles={styles.eachR}>
-          <Text style={styles.resourceT}>Resource</Text>
-          <Text style={styles.resourceQ}>Quantity</Text>
+          
+          <View >
+              {data.resources.map((resource, index) => (
+                <View key={index} style={styles.resourcesection}>
+                <Text style={styles.resourceT} key={index}>{resource.name}</Text>
+                <Text style={styles.resourceQ} key={index}>{resource.quantity}</Text>
+                </View>
+                
+                
+              ))}
+          </View>
+          {/* <View>
+          {data.resources.map((resource, index) => (
+                <Text key={index}>{resource.quantity}</Text>
+              ))}
+          </View> */}
         </View>
       </View>
 
@@ -128,12 +143,18 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
+  resourcesection:{
+    display:"flex",
+    flexDirection:"column",
+
+  },
   resourceT: {
     color: "white",
     fontWeight: "bold",
   },
   resourceQ: {
     color: "#FC5B28",
+    margin:"2%",
   },
 });
 

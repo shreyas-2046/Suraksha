@@ -107,7 +107,7 @@ const HomePage = () => {
       );
 
       // console.log("API Response:", response.data);
-
+      dispatch(setNearby(response.data.nearby));
       setNearbyAgencies(response.data.nearby);
       dispatch(setNearbyData(response.data.nearby));
     } catch (error) {
