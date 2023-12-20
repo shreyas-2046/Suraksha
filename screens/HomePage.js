@@ -25,7 +25,7 @@ const agencyTypes = [
   { value: "Army", label: "Army" },
 ];
 
-const HomePage = () => {
+const HomePage = ({ navigation }) => {
   const dispatch = useDispatch();
   const [searchValue, setSearchValue] = useState("");
   const [location, setLocation] = useState(null);
@@ -35,7 +35,17 @@ const HomePage = () => {
   const [NearbyData, setNearbyData] = useState(
     useSelector((state) => state.nearby.nearby)
   );
+  const removeData = async () => {
+    try {
+      await AsyncStorage.removeItem("key");
 
+      console.log("Data removed successfully!");
+
+      navigation.navigate("FillLoginPage");
+    } catch (error) {
+      console.error("Error removing data:", error);
+    }
+  };
   const handleSearch = () => {
     // console.log("Search Value:", searchValue);
     // console.log("Selected Agency Type:", selectedAgencyType);
@@ -128,7 +138,8 @@ const HomePage = () => {
           <Text style={styles.title}>{AgencyData.agency.name}</Text>
           <Text style={styles.subtitle}>{AgencyData.agency.address}</Text>
         </View>
-        <TouchableOpacity>
+
+        <TouchableOpacity onPress={removeData}>
           <Image
             source={require("../assets/hamBurgerIcon.png")}
             style={styles.ham}
@@ -149,7 +160,7 @@ const HomePage = () => {
 
       <ScrollView style={styles.cardContainer}>
         {Array.isArray(Nearby) && Nearby.length > 0 ? (
-          Nearby.map((item, index) => <Card key={index} data={item} />)
+          Nearby.map((item) => <Card key={item._id } data={item} />)
         ) : (
           <Text>No nearby agencies found</Text>
         )}
@@ -200,7 +211,7 @@ const styles = StyleSheet.create({
     borderWidth: 1, // Add border width
     width: 200,
     height: 50,
-    marginLeft: "20%",
+    marginLeft: 50,
     marginTop: 1,
   },
   button: {
@@ -208,8 +219,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
-    marginLeft: "20%",
-    width: "50%",
+    marginLeft: 10,
   },
   buttonText: {
     color: "white",

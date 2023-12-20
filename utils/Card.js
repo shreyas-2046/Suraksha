@@ -15,7 +15,8 @@ const Card = ({ data }) => {
   const goToRequestPage = () => {
     console.log(data._id);
     navigation.navigate("SendRequestPage", {
-      objectId: data._id, // Assuming the ObjectId field is named _id
+      object: data, 
+      objectId : data._id// Assuming the ObjectId field is named _id
     });
   };
 

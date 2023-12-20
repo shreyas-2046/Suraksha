@@ -1,6 +1,6 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useRoute } from "@react-navigation/native";
-
+import RNPickerSelect from "react-native-picker-select";
 import { useEffect } from "react";
 import React, { useState } from "react";
 import {
@@ -18,6 +18,7 @@ import { setNearby } from "../slices/nearbySlice";
 import * as Location from "expo-location";
 import Card from "../utils/Card";
 import { ScrollView } from "react-native";
+
 const SendRequestPage = () => {
   const [resource, setResource] = useState("");
   const [quantity, setQuantity] = useState("");
@@ -28,6 +29,7 @@ const SendRequestPage = () => {
   const dispatch = useDispatch();
   const AgencyData = useSelector((state) => state.auth.token);
   const [resourcelist, setResourceList] = useState({});
+  const Object = route.params?.object;
 
   const fetchLocation = async () => {
     try {
@@ -45,9 +47,24 @@ const SendRequestPage = () => {
     }
   };
 
+  const [selectedResource, setSelectedResource] = useState(null);
+  const names = Object.resources[0].name;
+
+  let allResourcesLabel = [];
+
+  for (let i = 0; i < names.length; i++) {
+    const object = {
+      value: names[i],
+      label: names[i],
+    };
+
+    allResourcesLabel.push(object);
+  }
+
   useEffect(() => {
     fetchLocation();
   }, []);
+
   const resourceTypes = [
     { value: "Food", label: "Food" },
     { value: "Medical Supplies", label: "Medical Supplies" },
@@ -89,11 +106,12 @@ const SendRequestPage = () => {
   };
 
   useEffect(() => {
-    setResourceList({
-      name: [resource],
+    setResourceList(() => ({
+      name: [selectedResource],
       quantity: [parseInt(quantity)],
-    });
-  }, [resource, quantity]);
+    }));
+  }, [selectedResource, quantity]);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -117,11 +135,11 @@ const SendRequestPage = () => {
       <View style={styles.requestContainer}>
         <Text style={{ fontWeight: "bold" }}>Send a Request</Text>
         <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Resource needed"
-            value={resource}
-            onChangeText={(text) => setResource(text)}
+          <RNPickerSelect
+            onValueChange={(value) => setSelectedResource(value)}
+            items={resourceTypes.concat(allResourcesLabel)}
+            placeholder={{ label: "Resources Needed", value: null }}
+            style={pickerSelectStyles}
           />
           <TextInput
             style={styles.input}
@@ -223,6 +241,30 @@ const styles = StyleSheet.create({
   },
   mapIcon: {
     marginTop: 20,
+  },
+});
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    color: "black",
+    paddingRight: 30,
+    marginBottom: 10,
+  },
+  inputAndroid: {
+    fontSize: 16,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    color: "black",
+    paddingRight: 30,
+    marginBottom: 10,
   },
 });
 
