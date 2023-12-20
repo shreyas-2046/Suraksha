@@ -20,8 +20,8 @@ const MapsPage = () => {
   const [errorMsg, setErrorMsg] = useState(null);
   const mapViewRef = useRef(null);
   const searchRef = useRef(null);
-  const NearbyData = useSelector(state => state.nearby.nearby);
-  console.log('Nearby data in redux',NearbyData);
+  const NearbyData = useSelector((state) => state.nearby.nearby);
+  console.log("Nearby data in redux", NearbyData);
 
   useEffect(() => {
     (async () => {
@@ -322,20 +322,39 @@ const MapsPage = () => {
 
         {/* For adding markers to all nearby places call  */}
 
-        {Array.isArray(NearbyData) && NearbyData.length > 0 ?
-  (NearbyData.map((agency, index) => (
-    <Marker
-      key={index}
-      coordinate={{
-        latitude: agency?.lat || 0, // Use a default value if latitude is undefined
-        longitude: agency?.lng || 0, // Use a default value if longitude is undefined
-      }}
-      title={agency.name}
-      description={agency.address}
-      pinColor="#000FFF" // can customize the pin color
-    />
-  ))):(<></>)}
-
+        {Array.isArray(NearbyData) && NearbyData.length > 0 ? (
+          NearbyData.map((agency, index) => (
+            <Marker
+              key={index}
+              coordinate={{
+                latitude: agency?.lat || 0,
+                longitude: agency?.lng || 0,
+              }}
+              title={agency.name}
+              description={agency.address}
+              pinColor="#000FFF"
+            >
+              {/* Customize the content within the Callout for additional agency details */}
+              <Callout onPress={() => handleMarkerPress(agency)}>
+                <View style={styles.callout}>
+                  <Text style={styles.calloutTitle}>{agency.name}</Text>
+                  <Text style={styles.calloutDetails}>
+                    Address: {agency.address}
+                  </Text>
+                  {/* Add more details as needed */}
+                  <Text style={styles.calloutDetails}>
+                    Contact Number: {agency.contactNumber}
+                  </Text>
+                  <Text style={styles.calloutDetails}>
+                    Agency Type: {agency.agencyType}
+                  </Text>
+                </View>
+              </Callout>
+            </Marker>
+          ))
+        ) : (
+          <></>
+        )}
         {tappedLocation && (
           <Marker
             coordinate={tappedLocation}
