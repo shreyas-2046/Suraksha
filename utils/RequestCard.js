@@ -6,12 +6,15 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const RequestCard = ({data}) => {
-  const handleAccept = async() => {
-    try{
+const RequestCard = ({ data }) => {
+  const [loading, setLoading] = useState(true);
+
+  const handleAccept = async () => {
+    setLoading(true);
+    try {
       const response = await axios.post(
         "https://tiny-pink-binturong-tutu.cyclic.app/api/v1/auth/receiver-action",
         {
@@ -20,14 +23,15 @@ const RequestCard = ({data}) => {
         }
       );
       console.log("data: ", response.data.requests);
-
-    }
-    catch(err){
+    } catch (err) {
       console.log(err);
     }
-  }
-  const handleReject = async() => {
-    try{
+
+    setLoading(false);
+  };
+  const handleReject = async () => {
+    setLoading(true);
+    try {
       const response = await axios.post(
         "https://tiny-pink-binturong-tutu.cyclic.app/api/v1/auth/receiver-action",
         {
@@ -36,22 +40,24 @@ const RequestCard = ({data}) => {
         }
       );
       console.log("data: ", response.data.requests);
-      
-    }
-    catch(err){
+    } catch (err) {
       console.log(err);
     }
-  }
+
+    setLoading(false);
+  };
+
+  useEffect (()=>{} , [loading])
   return (
     <View style={styles.container}>
       <View>
-        <Text style={styles.resourceT}>{data.from.name}</Text>
+        <Text style={styles.resourceT}>{data.from?.name}</Text>
         {/* <Text>Request</Text> */}
       </View>
       <View style={styles.resourceasked}>
-        <Text style={{ color: "white" }}>{data.resource.name[0]}</Text>
+        <Text style={{ color: "white" }}>{data.resource?.name[0]}</Text>
         <TouchableOpacity>
-          <Text style={styles.resourceQ}>{data.resource.quantity[0]}</Text>
+          <Text style={styles.resourceQ}>{data.resource?.quantity[0]}</Text>
         </TouchableOpacity>
       </View>
 
