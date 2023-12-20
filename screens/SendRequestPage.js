@@ -53,8 +53,8 @@ const SendRequestPage = () => {
         resource:resourcelist
       }
       console.log("printing the data", ToRequestAgency, " ", RequestingAgency.agency._id, " ", resourcelist)
-      const response = await axios.post('https://http://tiny-pink-binturong-tutu.cyclic.app/api/v1/auth/send-request',jsonData)
-
+      const response = await axios.post('https://tiny-pink-binturong-tutu.cyclic.app/api/v1/auth/send-request',jsonData)
+      console.log(response)
     
     }
     catch(error){

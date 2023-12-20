@@ -77,7 +77,7 @@ const HomePage = () => {
 
   const fetchNearbyData = async () => {
     const response = await axios.post(
-      "http://12.0.179.75:4000/api/v1/auth/get-nearby",
+      "https://tiny-pink-binturong-tutu.cyclic.app/api/v1/auth/get-nearby",
       {
         lat: location?.coords?.latitude || 0,
         lng: location?.coords?.longitude || 0,
@@ -88,7 +88,7 @@ const HomePage = () => {
     // console.log("API Response:", response.data);
 
     setNearbyAgencies(response.data.nearby);
-    dispatch(setNearbyData(response.data.nearby)); 
+    dispatch(setNearby(response.data.nearby)); 
   }
   const fetchData = async () => {
     try {
@@ -107,7 +107,7 @@ const HomePage = () => {
       );
   
       // console.log("API Response:", response.data);
-  
+      dispatch(setNearby(response.data.nearby));
       setNearbyAgencies(response.data.nearby);
       dispatch(setNearbyData(response.data.nearby));
     } catch (error) {

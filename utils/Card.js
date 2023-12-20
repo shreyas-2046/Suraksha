@@ -35,9 +35,9 @@ const Card = ({ data }) => {
       <View style={styles.resources}>
         <View styles={styles.eachR}>
           
-          <View>
+          <View >
               {data.resources.map((resource, index) => (
-                <View>
+                <View key={index} style={styles.resourcesection}>
                 <Text style={styles.resourceT} key={index}>{resource.name}</Text>
                 <Text style={styles.resourceQ} key={index}>{resource.quantity}</Text>
                 </View>
@@ -143,12 +143,18 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
+  resourcesection:{
+    display:"flex",
+    flexDirection:"column",
+
+  },
   resourceT: {
     color: "white",
     fontWeight: "bold",
   },
   resourceQ: {
     color: "#FC5B28",
+    margin:"2%",
   },
 });
 
