@@ -13,7 +13,7 @@ import { setNearby } from "../slices/nearbySlice";
 import * as Location from "expo-location";
 import Card from "../utils/Card";
 import { ScrollView } from "react-native";
-import RNPickerSelect from 'react-native-picker-select';
+import RNPickerSelect from "react-native-picker-select";
 
 const agencyTypes = [
   { value: "Fire-Brigade", label: "Fire-Brigade" },
@@ -32,7 +32,9 @@ const HomePage = () => {
   const [selectedAgencyType, setSelectedAgencyType] = useState(null);
   const [Nearby, setNearbyAgencies] = useState([]);
   const AgencyData = useSelector((state) => state.auth.token);
-  const [NearbyData,setNearbyData] = useState(useSelector((state) => state.nearby.nearby));
+  const [NearbyData, setNearbyData] = useState(
+    useSelector((state) => state.nearby.nearby)
+  );
 
   const handleSearch = () => {
     // console.log("Search Value:", searchValue);
@@ -42,7 +44,7 @@ const HomePage = () => {
     const filteredNearby = NearbyData.filter(
       (item) => item.agencyType === selectedAgencyType
     );
-      // console.log("filtered agency is " , filteredNearby)
+    // console.log("filtered agency is " , filteredNearby)
     // Set the filtered data to state
     setNearbyAgencies(filteredNearby);
     setNearbyData(Nearby);
@@ -65,19 +67,17 @@ const HomePage = () => {
     }
   };
 
-
-
   useEffect(() => {
     fetchData();
   }, [location, selectedAgencyType]);
 
   useEffect(() => {
     fetchNearbyData();
-  },[])
+  }, []);
 
   const fetchNearbyData = async () => {
     const response = await axios.post(
-      "http://12.0.179.75:4000/api/v1/auth/get-nearby",
+      "https://tiny-pink-binturong-tutu.cyclic.app/api/v1/auth/get-nearby",
       {
         lat: location?.coords?.latitude || 0,
         lng: location?.coords?.longitude || 0,
@@ -88,34 +88,32 @@ const HomePage = () => {
     // console.log("API Response:", response.data);
 
     setNearbyAgencies(response.data.nearby);
-    dispatch(setNearbyData(response.data.nearby)); 
-  }
+    dispatch(setNearby(response.data.nearby));
+  };
   const fetchData = async () => {
     try {
       if (selectedAgencyType === null) {
         console.log("Please select an agency type");
         return;
       }
-  
+
       const response = await axios.post(
-        "http://12.0.179.75:4000/api/v1/auth/get-nearby",
+        "https://tiny-pink-binturong-tutu.cyclic.app/api/v1/auth/get-nearby",
         {
           lat: location?.coords?.latitude || 0,
           lng: location?.coords?.longitude || 0,
           // filter: selectedAgencyType, // Use the selected agency type directly
         }
       );
-  
+
       // console.log("API Response:", response.data);
-  
+
       setNearbyAgencies(response.data.nearby);
       dispatch(setNearbyData(response.data.nearby));
     } catch (error) {
       console.error("Error fetching nearby data:", error);
     }
   };
-  
-  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -144,18 +142,18 @@ const HomePage = () => {
           placeholder={{ label: "Select Agency Type", value: null }}
           style={pickerSelectStyles}
         />
-        </View>
-        <TouchableOpacity style={styles.button} onPress={handleSearch}>
-          <Text style={styles.buttonText}>Search</Text>
-        </TouchableOpacity>
-      
+      </View>
+      <TouchableOpacity style={styles.button} onPress={handleSearch}>
+        <Text style={styles.buttonText}>Search</Text>
+      </TouchableOpacity>
+
       <ScrollView style={styles.cardContainer}>
-  {Array.isArray(Nearby) && Nearby.length > 0 ? (
-    Nearby.map((item, index) => <Card key={index} data={item} />)
-  ) : (
-    <Text>No nearby agencies found</Text>
-  )}
-</ScrollView>
+        {Array.isArray(Nearby) && Nearby.length > 0 ? (
+          Nearby.map((item, index) => <Card key={index} data={item} />)
+        ) : (
+          <Text>No nearby agencies found</Text>
+        )}
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -204,7 +202,6 @@ const styles = StyleSheet.create({
     height: 50,
     marginLeft: 50,
     marginTop: 1,
-
   },
   button: {
     backgroundColor: "#FC5B28",

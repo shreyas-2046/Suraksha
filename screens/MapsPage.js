@@ -348,6 +348,18 @@ const MapsPage = () => {
                   <Text style={styles.calloutDetails}>
                     Agency Type: {agency.agencyType}
                   </Text>
+                  <Text style={styles.calloutDetails}>
+                    Resource: {agency.resources[0].name[0]}
+                  </Text>
+                  <Text style={styles.calloutDetails}>
+                    Quantity :{agency.resources[0].quantity[0]}
+                  </Text>
+                  <Text style={styles.calloutDetails}>
+                    Resource: {agency.resources[0].name[1]}
+                  </Text>
+                  <Text style={styles.calloutDetails}>
+                    Quantity :{agency.resources[0].quantity[1]}
+                  </Text>
                 </View>
               </Callout>
             </Marker>

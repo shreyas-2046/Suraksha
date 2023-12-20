@@ -36,7 +36,7 @@ export default function App() {
 
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="VerifyEmail">
+        <Stack.Navigator initialRouteName="FillLoginPage">
           <Stack.Screen
             name="Login"
             options={{ headerShown: false }}
